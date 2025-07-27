@@ -6,7 +6,7 @@
 /*   By: yel-qori <yel-qori@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/25 14:14:42 by yel-qori          #+#    #+#             */
-/*   Updated: 2025/07/05 16:55:48 by yel-qori         ###   ########.fr       */
+/*   Updated: 2025/07/27 16:39:48 by yel-qori         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,20 @@
 # define MAX_PHILOSOPHERS 200
 # define MAX_FORKS 200
 
+typedef struct s_args t_args;
+typedef struct s_philos t_philos;
+
+typedef struct s_philos
+{
+    int id;
+    int meals_counter;
+    pthread_mutex_t *left_fork;
+    pthread_mutex_t *right_fork;
+    t_args *args;
+    long last_meal_time;
+    pthread_mutex_t meal_mutex;
+}t_philos;
+
 typedef struct s_args
 {
     int n_philos;
@@ -32,16 +46,13 @@ typedef struct s_args
     int meal_count;
     int flag_meal_count;
     int death_flag;
+    long start_time;
+    pthread_mutex_t death_mutex;
+    pthread_mutex_t print_mutex;
+    t_philos *philos;
 }   t_args; 
 
-typedef struct s_philos
-{
-    int id;
-    int meals_counter;
-    pthread_mutex_t *left_fork;
-    pthread_mutex_t *right_fork;
-    t_args *args;
-}t_philos;
+
 
 
 int	ft_putstr_fd(char *s, int fd);
@@ -52,9 +63,12 @@ void *safe_malloc(size_t bytes);
 long get_time_ms(void);
 
 
-
+int is_dead(t_philos *philo);
+int is_dead_global(t_args *args);
+void safe_print(t_philos *philo, char *action);
 int check_correct_args(char **av);
 int check_valid_args(char *av);
+void set_death_flag(t_args *args);
 void routine(t_philos *philo);
 int init_philos(t_philos *philos, t_args *args, pthread_mutex_t *forks);
 t_args *convert_args(char **av);
@@ -63,6 +77,7 @@ int init_mutex(pthread_mutex_t *forks, int n_philos);
 void thinking(t_philos *philo);
 void sleeping(t_philos *philo);
 void routine(t_philos *philo);
+void eating(t_philos *philo);
 
 
 

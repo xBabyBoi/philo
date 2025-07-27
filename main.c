@@ -6,7 +6,7 @@
 /*   By: yel-qori <yel-qori@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/25 14:15:24 by yel-qori          #+#    #+#             */
-/*   Updated: 2025/07/05 16:00:54 by yel-qori         ###   ########.fr       */
+/*   Updated: 2025/07/27 16:36:22 by yel-qori         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,8 +58,10 @@ int main(int ac, char **av)
         init_mutex(forks, data->n_philos);
         philosophers = safe_malloc(sizeof(t_philos) * data->n_philos);
         init_philos(philosophers, data, forks);
+        data->philos = philosophers;
         threads = safe_malloc(sizeof(pthread_t) * data->n_philos);
         create_threads(threads, philosophers, data);
+        
     }
     else 
     {

@@ -6,7 +6,7 @@
 /*   By: yel-qori <yel-qori@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/03 15:02:54 by yel-qori          #+#    #+#             */
-/*   Updated: 2025/07/05 16:40:41 by yel-qori         ###   ########.fr       */
+/*   Updated: 2025/07/27 15:37:46 by yel-qori         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ int init_philos(t_philos *philos, t_args *args, pthread_mutex_t *forks)
     int i;
     
     i = 0;
+    args->start_time = get_time_ms();
     while (i < args->n_philos)
     {
         philos[i].id = i + 1;
@@ -24,6 +25,8 @@ int init_philos(t_philos *philos, t_args *args, pthread_mutex_t *forks)
         philos[i].args = args;
         philos[i].left_fork = &forks[i];
         philos[i].right_fork = &forks[(i + 1) % args->n_philos];
+        philos[i].last_meal_time = get_time_ms();
+        pthread_mutex_init(&philos[i].meal_mutex, NULL);
         i++; 
     }
     return (0);
@@ -47,6 +50,8 @@ t_args *convert_args(char **av)
     }
     else
         data->flag_meal_count = 0;
+    pthread_mutex_init(&data->death_mutex, NULL);
+    pthread_mutex_init(&data->print_mutex, NULL);
     return (data);
 }
 
