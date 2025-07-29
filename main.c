@@ -6,7 +6,7 @@
 /*   By: yel-qori <yel-qori@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/25 14:15:24 by yel-qori          #+#    #+#             */
-/*   Updated: 2025/07/27 16:36:22 by yel-qori         ###   ########.fr       */
+/*   Updated: 2025/07/29 17:09:31 by yel-qori         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,6 @@ int main(int ac, char **av)
         data->philos = philosophers;
         threads = safe_malloc(sizeof(pthread_t) * data->n_philos);
         create_threads(threads, philosophers, data);
-        
     }
     else 
     {

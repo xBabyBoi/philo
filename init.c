@@ -6,7 +6,7 @@
 /*   By: yel-qori <yel-qori@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/03 15:02:54 by yel-qori          #+#    #+#             */
-/*   Updated: 2025/07/27 15:37:46 by yel-qori         ###   ########.fr       */
+/*   Updated: 2025/07/29 20:20:49 by yel-qori         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,9 +50,35 @@ t_args *convert_args(char **av)
     }
     else
         data->flag_meal_count = 0;
+    data->death_flag = 0;
     pthread_mutex_init(&data->death_mutex, NULL);
     pthread_mutex_init(&data->print_mutex, NULL);
     return (data);
+}
+
+void monitoring(t_philos *philos)
+{
+    int i;
+
+    while (1)
+    {
+        i = 0;
+        while (i < philos->args->n_philos)
+        {
+            pthread_mutex_lock(&philos[i].meal_mutex);
+            long last_meal = philos[i].last_meal_time;
+            if (get_time_ms() - last_meal > philos->args->t_die)
+            {
+                safe_print(&philos[i], "is dead");
+                set_death_flag(philos->args);
+                pthread_mutex_unlock(&philos[i].meal_mutex);
+                return ;
+            }
+            pthread_mutex_unlock(&philos[i].meal_mutex);
+            i++;
+        }
+        usleep(1000);
+    }
 }
 
 int create_threads(pthread_t *threads, t_philos *philos, t_args *args)
@@ -66,6 +92,7 @@ int create_threads(pthread_t *threads, t_philos *philos, t_args *args)
         i++;
     }
     i = 0;
+    monitoring(philos);
     while (i < args->n_philos)
     {
         pthread_join(threads[i], NULL);

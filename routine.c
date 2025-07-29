@@ -6,7 +6,7 @@
 /*   By: yel-qori <yel-qori@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/04 15:33:37 by yel-qori          #+#    #+#             */
-/*   Updated: 2025/07/27 16:42:41 by yel-qori         ###   ########.fr       */
+/*   Updated: 2025/07/29 18:29:51 by yel-qori         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,11 +48,13 @@ void eating(t_philos *philo)
         safe_print(philo, "has taken left fork\n");
     }
     safe_print(philo, "is eating\n");
+    pthread_mutex_lock(&philo->meal_mutex);
     philo->last_meal_time = get_time_ms();
+    philo->meals_counter++;
+    pthread_mutex_unlock(&philo->meal_mutex);
     usleep(philo->args->t_eat * 1000);
     pthread_mutex_unlock(philo->left_fork);
     pthread_mutex_unlock(philo->right_fork);
-    philo->meals_counter++;
 }
 
 int all_meals_completed(t_philos *philos, int n_philos)
@@ -89,7 +91,7 @@ int is_dead_global(t_args *args)
 void set_death_flag(t_args *args)
 {
     pthread_mutex_lock(&args->death_mutex);
-    args->death_flag = 1;  // Set death flag to true
+    args->death_flag = 1;
     pthread_mutex_unlock(&args->death_mutex);
 }
 
@@ -121,7 +123,7 @@ void safe_print(t_philos *philo, char *action)
     if (!is_dead_global(philo->args))
     {
         relative_time = get_time_ms() - philo->args->start_time;
-        printf("%ld %d %s\n", relative_time, philo->id, action);
+        printf("%ld %d %s", relative_time, philo->id, action);
     }
     pthread_mutex_unlock(&philo->args->print_mutex);
 }
