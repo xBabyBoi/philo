@@ -6,7 +6,7 @@
 /*   By: yel-qori <yel-qori@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/01 15:26:26 by yel-qori          #+#    #+#             */
-/*   Updated: 2025/07/29 18:21:29 by yel-qori         ###   ########.fr       */
+/*   Updated: 2025/07/29 21:19:02 by yel-qori         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,4 +82,14 @@ long get_time_ms(void)
     
     gettimeofday(&tv, NULL);
     return (tv.tv_sec * 1000) + (tv.tv_usec / 1000);
+}
+
+int ft_usleep(long ms)
+{
+	long start;
+
+	start = get_time_ms();
+	while((get_time_ms() - start) < ms)
+		usleep(500);
+	return (0);
 }

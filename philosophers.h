@@ -6,7 +6,7 @@
 /*   By: yel-qori <yel-qori@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/25 14:14:42 by yel-qori          #+#    #+#             */
-/*   Updated: 2025/07/27 16:39:48 by yel-qori         ###   ########.fr       */
+/*   Updated: 2025/07/29 21:19:08 by yel-qori         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,7 @@ int	ft_atoi(char *str);
 int	ft_isdigit(int a);
 void *safe_malloc(size_t bytes);
 long get_time_ms(void);
+int ft_usleep(long ms);
 
 
 int is_dead(t_philos *philo);

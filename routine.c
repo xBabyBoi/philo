@@ -6,7 +6,7 @@
 /*   By: yel-qori <yel-qori@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/04 15:33:37 by yel-qori          #+#    #+#             */
-/*   Updated: 2025/07/29 18:29:51 by yel-qori         ###   ########.fr       */
+/*   Updated: 2025/07/29 21:26:04 by yel-qori         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void thinking(t_philos *philo)
 void sleeping(t_philos *philo)
 {
     safe_print(philo, "philosopher is sleeping\n");
-    usleep(philo->args->t_sleep * 1000);
+    ft_usleep(philo->args->t_sleep);
 }
 
 void eating(t_philos *philo)
@@ -29,7 +29,7 @@ void eating(t_philos *philo)
     {
         pthread_mutex_lock(philo->left_fork);
         safe_print(philo, "has taken left fork\n");
-        usleep(philo->args->t_die * 1000);
+        ft_usleep(philo->args->t_die);
         pthread_mutex_unlock(philo->left_fork);
         return;
     }
@@ -48,11 +48,11 @@ void eating(t_philos *philo)
         safe_print(philo, "has taken left fork\n");
     }
     safe_print(philo, "is eating\n");
+    philo->meals_counter++;
     pthread_mutex_lock(&philo->meal_mutex);
     philo->last_meal_time = get_time_ms();
-    philo->meals_counter++;
     pthread_mutex_unlock(&philo->meal_mutex);
-    usleep(philo->args->t_eat * 1000);
+    ft_usleep(philo->args->t_eat);
     pthread_mutex_unlock(philo->left_fork);
     pthread_mutex_unlock(philo->right_fork);
 }
