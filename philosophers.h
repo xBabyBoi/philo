@@ -6,7 +6,7 @@
 /*   By: yel-qori <yel-qori@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/25 14:14:42 by yel-qori          #+#    #+#             */
-/*   Updated: 2025/07/29 21:19:08 by yel-qori         ###   ########.fr       */
+/*   Updated: 2025/07/30 19:30:39 by yel-qori         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,8 @@ int ft_usleep(long ms);
 
 
 int is_dead(t_philos *philo);
+int all_meals_completed(t_philos *philos, int n_philos);
+void destory_all(char *str, t_philos * philos, pthread_mutex_t *forks);
 int is_dead_global(t_args *args);
 void safe_print(t_philos *philo, char *action);
 int check_correct_args(char **av);

@@ -6,7 +6,7 @@
 /*   By: yel-qori <yel-qori@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/04 15:33:37 by yel-qori          #+#    #+#             */
-/*   Updated: 2025/07/29 21:26:04 by yel-qori         ###   ########.fr       */
+/*   Updated: 2025/07/30 17:30:04 by yel-qori         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,8 +48,8 @@ void eating(t_philos *philo)
         safe_print(philo, "has taken left fork\n");
     }
     safe_print(philo, "is eating\n");
-    philo->meals_counter++;
     pthread_mutex_lock(&philo->meal_mutex);
+    philo->meals_counter++;
     philo->last_meal_time = get_time_ms();
     pthread_mutex_unlock(&philo->meal_mutex);
     ft_usleep(philo->args->t_eat);
@@ -60,22 +60,21 @@ void eating(t_philos *philo)
 int all_meals_completed(t_philos *philos, int n_philos)
 {
     int i;
-
+    int completed_meals;
+    
     i = 0;
+    completed_meals = 0;
     if (philos[0].args->flag_meal_count != 1)
         return (0);
     while (n_philos > i)
     {
         pthread_mutex_lock(&philos[i].meal_mutex);
-        if (philos[i].meals_counter < philos[i].args->meal_count)
-        {
-            pthread_mutex_unlock(&philos[i].meal_mutex);
-            return (0);   
-        }
+        if (philos[i].meals_counter >= philos[i].args->meal_count)
+            completed_meals++;
         pthread_mutex_unlock(&philos[i].meal_mutex);
         i++;
     }
-    return (1);
+    return (completed_meals == n_philos);
 }
 
 int is_dead_global(t_args *args)
@@ -130,16 +129,27 @@ void safe_print(t_philos *philo, char *action)
 
 void routine(t_philos *philo)
 {
-    while (!is_dead_global(philo->args) && !all_meals_completed(philo->args->philos, philo->args->n_philos))
+    if (philo->id % 2 == 0)
+        ft_usleep(1);
+        
+    while (!is_dead_global(philo->args))
     {
         thinking(philo);
-        if (is_dead_global(philo->args) || all_meals_completed(philo->args->philos,philo->args->n_philos))
+        if (is_dead_global(philo->args))
             break;
+            
         eating(philo);
-        if (is_dead_global(philo->args) || all_meals_completed(philo->args->philos,philo->args->n_philos))
+        if (is_dead_global(philo->args))
             break;
+        if (philo->args->flag_meal_count)
+        {
+            pthread_mutex_lock(&philo->meal_mutex);
+            int meals_done = philo->meals_counter >= philo->args->meal_count;
+            pthread_mutex_unlock(&philo->meal_mutex);
+            
+            if (meals_done)
+                break; // This philosopher is done
+        }
         sleeping(philo);
-        if (is_dead_global(philo->args) || all_meals_completed(philo->args->philos, philo->args->n_philos))
-            break;
     }
 }

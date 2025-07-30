@@ -6,7 +6,7 @@
 /*   By: yel-qori <yel-qori@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/03 15:02:54 by yel-qori          #+#    #+#             */
-/*   Updated: 2025/07/29 20:20:49 by yel-qori         ###   ########.fr       */
+/*   Updated: 2025/07/30 19:30:02 by yel-qori         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,11 @@ void monitoring(t_philos *philos)
             }
             pthread_mutex_unlock(&philos[i].meal_mutex);
             i++;
+        }
+        if (philos->args->flag_meal_count && all_meals_completed(philos, philos->args->n_philos))
+        {
+            set_death_flag(philos->args);
+            return;
         }
         usleep(1000);
     }

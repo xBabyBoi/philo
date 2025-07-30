@@ -6,7 +6,7 @@
 /*   By: yel-qori <yel-qori@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/25 14:15:24 by yel-qori          #+#    #+#             */
-/*   Updated: 2025/07/29 17:09:31 by yel-qori         ###   ########.fr       */
+/*   Updated: 2025/07/30 19:40:40 by yel-qori         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,22 +50,22 @@ int main(int ac, char **av)
     t_philos *philosophers;
     pthread_t *threads;
     
-
-    if (ac == 5 || ac == 6)
-    {
-        data = convert_args(av);
-        forks = safe_malloc(sizeof(pthread_mutex_t) * data->n_philos);
-        init_mutex(forks, data->n_philos);
-        philosophers = safe_malloc(sizeof(t_philos) * data->n_philos);
-        init_philos(philosophers, data, forks);
-        data->philos = philosophers;
-        threads = safe_malloc(sizeof(pthread_t) * data->n_philos);
-        create_threads(threads, philosophers, data);
-    }
-    else 
-    {
-        printf("error\n");
-    }
+    if (ac != 5 && ac != 6)
+        return(write(2, "invalid arguments\n", 18));
+    
+    data = convert_args(av);
+    forks = safe_malloc(sizeof(pthread_mutex_t) * data->n_philos);
+    init_mutex(forks, data->n_philos);
+    philosophers = safe_malloc(sizeof(t_philos) * data->n_philos);
+    init_philos(philosophers, data, forks);
+    data->philos = philosophers;
+    threads = safe_malloc(sizeof(pthread_t) * data->n_philos);
+    create_threads(threads, philosophers, data);
+    destory_all(NULL, philosophers, forks);
+    free(threads);
+    free(philosophers);  
+    free(forks);
+    free(data);
     return (0);
 }
 
