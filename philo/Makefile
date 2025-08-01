@@ -4,12 +4,15 @@ SRC = main.c \
         init.c \
 		routine.c \
 		utils.c \
+		threads.c \
+		monitor.c \
+		utils2.c \
           
 OBJS = $(SRC:.c=.o)
 
 CC = cc
 
-CFLAGS = -Wall -Wextra -Werror -fsanitize=thread
+CFLAGS = -Wall -Wextra -Werror 
 
 
 
